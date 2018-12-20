@@ -4,15 +4,22 @@ import disain  # Это наш конвертированный файл диз�
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pullGPS
 import xlrd, xlwt
+from datetime import datetime
 
 import os
 import threading
+import logging
 
 class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
 
     def __init__(self):
         # Это здесь нужно для доступа к переменным, методам
         # и т.д. в файле design.py
+        now = datetime.now()
+        logging.basicConfig(filename="LOG.log", level=logging.INFO)
+        logging.info(datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S"))
+
+
         self.pathXml = None
         self.pathImage = None
         self.pathImageItog = None
@@ -30,6 +37,9 @@ class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
         self.pushButton_5.clicked.connect(self.start)
 
         self.progressBar.setValue(0)
+
+    def __del__(self):
+        logging.info("________________________________________________________________________________________")
 
     def startStreams(self, startImange, endImage, vals, pach_photo, pach_itog):
         '''
@@ -69,14 +79,17 @@ class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
                     self.progressBar.setValue(temp)
                 else:
                     print("Экстренная остоновка потока")
+                    logging.debug("Emergency stop flow")
                     break
 
             except BaseException as e:
                 print("Ошибка")
                 print("Поток", startImange, "-", endImage, "имя", name)
                 print(e)
+                logging.error("Thread"+ str(startImange) + "-" + str(endImage) + "name" + str(name) + str(e))
 
         print("Поток завершон", startImange, "-", endImage)
+        logging.debug("Flow is complete" + str(startImange) + ' - ' + str(endImage))
 
 
     def openXml(self):
@@ -88,6 +101,7 @@ class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
 
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Файл с географическими координатами', '/home', filter='*.xls')[0]
         self.pathXml = fname
+        logging.debug("openXml " + str(fname))
         return fname
 
     def openPathImage(self):
@@ -103,6 +117,7 @@ class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
         self.label_6.setText(str(len(listFnane)) + ' штук')
 
         self.progressBar.setMaximum(len(listFnane))  #Задаем для ProgressBar максимальное число
+        logging.debug("openPathImage " + str(fname))
         return fname
 
     def openPathImageItog(self):
@@ -113,6 +128,7 @@ class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
         print("openPathImageItog")
         fname = QtWidgets.QFileDialog.getExistingDirectory(self, 'Укажите попку с результирующими фотографиями')
         self.pathImageItog = fname
+        logging.debug("openPathImageItog " + str(fname))
         return fname
 
     def exampleXML(self):
