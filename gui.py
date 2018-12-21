@@ -41,6 +41,7 @@ class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
     def __del__(self):
         logging.info("________________________________________________________________________________________")
 
+
     def startStreams(self, startImange, endImage, vals, pach_photo, pach_itog):
         '''
         Функция формирования потока принимает список с именами, начальная и конечная строка откуда брать изображения и куда его отдовать
@@ -86,7 +87,7 @@ class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
                 print("Ошибка")
                 print("Поток", startImange, "-", endImage, "имя", name)
                 print(e)
-                logging.error("Thread"+ str(startImange) + "-" + str(endImage) + "name" + str(name) + str(e))
+                logging.error("Thread" + str(startImange) + "-" + str(endImage) + "name" + str(name) + str(e))
 
         print("Поток завершон", startImange, "-", endImage)
         logging.debug("Flow is complete" + str(startImange) + ' - ' + str(endImage))
@@ -177,7 +178,6 @@ class imageGUIGPS(QtWidgets.QMainWindow, disain.Ui_MainWindow):
                 self.pushButton_5.setText("Пуск")
                 self.stateThreading = False
                 self.progressBar.setValue(0)
-
 
 def main():
     QtGui.QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
